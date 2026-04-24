@@ -4,7 +4,7 @@ hidden = [".config", "package-lock.json", ".next", ".swc"]
 modules = ["nodejs-22"]
 
 [nix]
-channel = "stable-24_11"
+channel = "stable-23_11"
 
 [env]
 NEXT_TELEMETRY_DISABLED = "1"
@@ -17,6 +17,9 @@ deploymentTarget = "cloudrun"
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[hints]
+enable = true
 
 [agent]
 expertMode = true
