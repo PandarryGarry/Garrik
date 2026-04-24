@@ -6,7 +6,7 @@ import { ChefHat } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
-export const meta Metadata = {
+export const metadata: Metadata = {
   title: "Gastro Mood | Кулинарная платформа",
   description: "Делитесь рецептами, находите вдохновение",
 };

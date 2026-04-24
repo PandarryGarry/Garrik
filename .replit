@@ -1,5 +1,5 @@
 run = "npm run dev"
-entrypoint = "index.js"
+entrypoint = "app/page.tsx"
 hidden = [".config", "package-lock.json", ".next", ".swc"]
 modules = ["nodejs-22"]
 
@@ -20,3 +20,6 @@ externalPort = 80
 
 [agent]
 expertMode = true
+
+[environment]
+NPM_FLAGS = "--legacy-peer-deps"
