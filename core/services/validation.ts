@@ -1,3 +1,4 @@
+// core/services/validation.ts
 import { RecipeInput } from "../domain/recipe";
 
 export function validateRecipe(input: unknown): RecipeInput {
