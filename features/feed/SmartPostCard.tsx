@@ -12,27 +12,29 @@ export function SmartPostCard({ post }: { post: Post }) {
   const [loaded, setLoaded] = useState(false);
   const [shareLoading, setShareLoading] = useState(false);
 
-  const handleShare = async (e: React.MouseEvent) => {
+  // Вся логика шеринга внутри компонента — никаких пропсов с функциями
+  const handleShare = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setShareLoading(true);
 
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: post.title,
-          text: post.content,
-          url: `${window.location.origin}/recipe/${post.slug}`,
-        });
-      } else {
-        await navigator.clipboard.writeText(`${window.location.origin}/recipe/${post.slug}`);
-        toast.success("Ссылка скопирована в буфер обмена");
-      }
-    } catch (err) {
-      // Пользователь отменил шеринг — это нормально
-    } finally {
-      setShareLoading(false);
+    const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/recipe/${post.slug}`;
+
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      navigator.share({
+        title: post.title,
+        text: post.content,
+        url,
+      }).catch(() => {});
+    } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        toast.success("Ссылка скопирована");
+      }).catch(() => {
+        toast.error("Не удалось скопировать");
+      });
     }
+
+    setShareLoading(false);
   };
 
   // Карточка ГАСТРОУЖИНА
