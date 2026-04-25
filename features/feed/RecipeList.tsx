@@ -4,13 +4,13 @@ import { RecipeCard } from "./RecipeCard";
 export function RecipeList({ recipes }: { recipes: Recipe[] }) {
   if (recipes.length === 0) {
     return (
-      <div className="text-center py-16">
-        <p className="text-stone-500">
-          Пока нет рецептов.{" "}
-          <a href="/submit" className="text-amber-600 hover:underline font-medium">
-            Добавьте первый
-          </a>
+      <div className="text-center py-20">
+        <p className="text-stone-500 text-lg">
+          Пока нет рецептов
         </p>
+        <a href="/submit" className="text-stone-950 font-semibold mt-2 inline-block hover:underline">
+          Добавьте первый
+        </a>
       </div>
     );
   }

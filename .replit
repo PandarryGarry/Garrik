@@ -17,3 +17,9 @@ deploymentTarget = "cloudrun"
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[environment]
+NPM_FLAGS = "--legacy-peer-deps"
+
+[agent]
+expertMode = true

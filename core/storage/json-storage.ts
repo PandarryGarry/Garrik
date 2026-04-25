@@ -1,56 +1,49 @@
 import fs from "fs/promises";
 import path from "path";
-import { Recipe, RecipeInput, RecipeRepository } from "../domain/recipe";
+import { Post, PostRepository } from "../domain/post";
+import slugify from "slugify";
 
-const DB_PATH = path.join(process.cwd(), "data", "recipes.json");
+const DB_PATH = path.join(process.cwd(), "data", "posts.json");
 
-export class JsonRecipeRepository implements RecipeRepository {
-  private async readAll(): Promise<Recipe[]> {
+export class JsonPostRepository implements PostRepository {
+  private async readAll(): Promise<Post[]> {
     try {
       const data = await fs.readFile(DB_PATH, "utf-8");
-      return JSON.parse(data) as Recipe[];
+      // Миграция старых данных: если нет type, ставим 'recipe'
+      return JSON.parse(data).map((p: any) => ({ ...p, type: p.type || 'recipe' }));
     } catch {
       return [];
     }
   }
 
-  private async writeAll(recipes: Recipe[]): Promise<void> {
+  private async writeAll(posts: Post[]): Promise<void> {
     await fs.mkdir(path.dirname(DB_PATH), { recursive: true });
-    await fs.writeFile(DB_PATH, JSON.stringify(recipes, null, 2), "utf-8");
+    await fs.writeFile(DB_PATH, JSON.stringify(posts, null, 2), "utf-8");
   }
 
-  async save(input: RecipeInput): Promise<Recipe> {
-    const recipes = await this.readAll();
-    const newRecipe: Recipe = {
-      ...input,
+  async save(input: Partial<Post>): Promise<Post> {
+    const posts = await this.readAll();
+    const newPost: Post = {
       id: crypto.randomUUID(),
-      slug: this.generateUniqueSlug(input.title, recipes),
+      slug: slugify(input.title!, { lower: true, strict: true, replacement: "-", locale: "ru" }),
       createdAt: new Date().toISOString(),
       createdAtFormatted: new Date().toLocaleDateString("ru-RU", {
         timeZone: "UTC", day: "2-digit", month: "2-digit", year: "numeric"
       }),
-    };
-    recipes.unshift(newRecipe);
-    await this.writeAll(recipes);
-    return newRecipe;
+      ...input as any
+    } as Post;
+
+    posts.unshift(newPost);
+    await this.writeAll(posts);
+    return newPost;
   }
 
-  private generateUniqueSlug(title: string, recipes: Recipe[]): string {
-    const baseSlug = slugify(title, { lower: true, strict: true, replacement: "-", locale: "ru" });
-    let slug = baseSlug;
-    let counter = 1;
-    while (recipes.some(r => r.slug === slug)) {
-      slug = `${baseSlug}-${counter++}`;
-    }
-    return slug;
+  async findBySlug(slug: string): Promise<Post | null> {
+    const posts = await this.readAll();
+    return posts.find(p => p.slug === slug) || null;
   }
 
-  async findBySlug(slug: string): Promise<Recipe | null> {
-    const recipes = await this.readAll();
-    return recipes.find(r => r.slug === slug) || null;
-  }
-
-  async findAll(): Promise<Recipe[]> {
+  async findAll(): Promise<Post[]> {
     return await this.readAll();
   }
 }

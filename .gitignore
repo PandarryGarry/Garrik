@@ -129,7 +129,32 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Dependencies
+node_modules
+.next
+
+# Logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Build outputs
+dist
+build
+
+# Environment
+.env*.local
+
+# OS
+.DS_Store
+*.swp
+*.swo
+
 # Gastro Mood
 data/
-.DS_Store
 

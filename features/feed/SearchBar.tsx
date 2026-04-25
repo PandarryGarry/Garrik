@@ -3,7 +3,6 @@
 import { Search } from "lucide-react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Input } from "@ui/components";
 
 export function SearchBar() {
   const router = useRouter();
@@ -22,14 +21,17 @@ export function SearchBar() {
   }, [query, router, searchParams, pathname]);
 
   return (
-    <Input
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
-      placeholder="Поиск рецептов..."
-      className="w-full sm:w-80"
-      leftIcon={<Search size={18} aria-hidden="true" />}
-      aria-label="Поиск рецептов"
-    />
+    <div className="search-wrapper">
+      <Search className="search-icon" size={18} />
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Поиск"
+        className="search-input"
+        aria-label="Поиск рецептов"
+      />
+    </div>
   );
 }
 

@@ -2,132 +2,135 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input, Card } from "@ui/components";
+import { Button, Input } from "@ui/components";
+import { UtensilsCrossed, Calendar, Newspaper } from "lucide-react";
+import { toast } from "sonner";
 
 export function SubmitForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [postType, setPostType] = useState<"recipe" | "event" | "news">("recipe");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+
+    const payload = {
+      type: postType,
+      title: formData.get("title"),
+      content: formData.get("content"),
+      imageUrl: formData.get("imageUrl"),
+      author: formData.get("author"),
+      ingredients: postType === 'recipe' ? String(formData.get("ingredients")).split("\n").filter(Boolean) : undefined,
+      steps: postType === 'recipe' ? String(formData.get("steps")).split("\n").filter(Boolean) : undefined,
+      date: formData.get("date"),
+      location: formData.get("location"),
+    };
 
     try {
       const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: formData.get("title"),
-          description: formData.get("description"),
-          ingredients: String(formData.get("ingredients") || "")
-            .split("\n")
-            .map((s: string) => s.trim())
-            .filter(Boolean),
-          steps: String(formData.get("steps") || "")
-            .split("\n")
-            .map((s: string) => s.trim())
-            .filter(Boolean),
-          imageUrl: formData.get("imageUrl"),
-          author: formData.get("author"),
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Ошибка сохранения");
+      if (!res.ok) throw new Error(data.error);
 
+      toast.success("Опубликовано! 🎉");
       router.push(`/recipe/${data.slug}`);
-      router.refresh();
     } catch (err: any) {
-      setError(err.message || "Не удалось опубликовать. Проверьте данные.");
+      toast.error(err.message || "Не удалось опубликовать");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Card className="p-6 sm:p-8">
-      <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-        {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm" role="alert">
-            {error}
+    <div className="max-w-2xl mx-auto py-8 px-4">
+      <h1 className="text-2xl font-bold mb-6 text-center">Что публикуем?</h1>
+
+      {/* Выбор типа поста */}
+      <div className="flex gap-3 mb-8 justify-center">
+        {[
+          { id: 'recipe', label: 'Рецепт', icon: UtensilsCrossed },
+          { id: 'event', label: 'Гастроужин', icon: Calendar },
+          { id: 'news', label: 'Новость', icon: Newspaper },
+        ].map(item => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setPostType(item.id as any)}
+            className={`
+              flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all w-24
+              ${postType === item.id 
+                ? 'border-stone-900 bg-stone-50 text-stone-900' 
+                : 'border-transparent bg-white text-stone-400 hover:bg-stone-50'}
+            `}
+          >
+            <item.icon size={24} />
+            <span className="text-xs font-semibold">{item.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label className="input-label">Заголовок</label>
+          <Input name="title" placeholder={postType === 'recipe' ? "Название блюда" : "Заголовок"} required />
+        </div>
+
+        <div>
+          <label className="input-label">Описание / Текст</label>
+          <textarea name="content" className="input min-h-[100px] resize-none" placeholder="Расскажите подробнее..." required />
+        </div>
+
+        {/* Поля для Рецепта */}
+        {postType === 'recipe' && (
+          <div className="grid sm:grid-cols-2 gap-4 p-4 bg-stone-50 rounded-xl border border-stone-100">
+            <div>
+              <label className="input-label">Ингредиенты</label>
+              <textarea name="ingredients" className="input font-mono text-sm min-h-[150px]" placeholder="Каждый с новой строки" required />
+            </div>
+            <div>
+              <label className="input-label">Шаги</label>
+              <textarea name="steps" className="input font-mono text-sm min-h-[150px]" placeholder="Каждый с новой строки" required />
+            </div>
           </div>
         )}
 
-        <Input 
-          name="title" 
-          label="Название рецепта *" 
-          placeholder="Борщ по-киевски" 
-          required 
-          maxLength={100} 
-          aria-required="true"
-        />
-
-        <Input 
-          name="description" 
-          label="Краткое описание" 
-          placeholder="Пару слов о блюде..." 
-          maxLength={500} 
-        />
-
-        <div className="grid sm:grid-cols-2 gap-6">
-          <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-stone-700">Ингредиенты *</label>
-            <textarea 
-              name="ingredients" 
-              className="input-field font-mono text-sm min-h-[150px]" 
-              placeholder="500 г свинины&#10;2 луковицы&#10;3 зубчика чеснока" 
-              required 
-              aria-required="true"
-            />
-            <p className="text-xs text-stone-400">Каждый ингредиент с новой строки</p>
+        {/* Поля для Гастроужина */}
+        {postType === 'event' && (
+          <div className="grid sm:grid-cols-2 gap-4 p-4 bg-amber-50 rounded-xl border border-amber-100">
+            <div>
+              <label className="input-label">Дата</label>
+              <Input name="date" type="date" required />
+            </div>
+            <div>
+              <label className="input-label">Место</label>
+              <Input name="location" placeholder="Название ресторана" required />
+            </div>
           </div>
-          <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-stone-700">Шаги приготовления *</label>
-            <textarea 
-              name="steps" 
-              className="input-field font-mono text-sm min-h-[150px]" 
-              placeholder="Нарезать мясо кубиками&#10;Обжарить на среднем огне&#10;Добавить лук и чеснок" 
-              required 
-              aria-required="true"
-            />
-            <p className="text-xs text-stone-400">Каждый шаг с новой строки</p>
-          </div>
+        )}
+
+        <div>
+          <label className="input-label">Фото (Ссылка)</label>
+          <Input name="imageUrl" type="url" placeholder="https://..." required />
         </div>
 
-        <Input 
-          name="imageUrl" 
-          type="url" 
-          label="Ссылка на фото *" 
-          placeholder="https://example.com/photo.jpg" 
-          required 
-          aria-required="true"
-        />
+        <div>
+          <label className="input-label">Автор</label>
+          <Input name="author" placeholder="Ваше имя" required />
+        </div>
 
-        <Input 
-          name="author" 
-          label="Ваше имя *" 
-          placeholder="Алексей К." 
-          required 
-          maxLength={50} 
-          aria-required="true"
-        />
-
-        <Button 
-          type="submit" 
-          variant="primary" 
-          className="w-full" 
-          isLoading={loading}
-          aria-busy={loading}
-        >
-          {loading ? "Публикация..." : "Опубликовать рецепт"}
+        <Button type="submit" variant="primary" className="w-full mt-4" isLoading={loading}>
+          Опубликовать
         </Button>
       </form>
-    </Card>
+    </div>
   );
 }
 

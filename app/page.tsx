@@ -1,2 +1,2 @@
-export { default } from "@features/recipe-list/page";
+export { default } from "@features/feed/page";
 

@@ -1,30 +1,18 @@
 import { NextResponse } from "next/server";
-import { JsonRecipeRepository } from "@core/storage/json-storage";
-import { validateRecipe } from "@core/services/validation";
-import { createRecipe } from "@core/services/recipe.service";
+import { JsonPostRepository } from "@core/storage/json-storage";
+import { validatePost } from "@core/services/validation";
 
-export const config = {
-  api: { bodyParser: { sizeLimit: "1mb" } }
-};
-
-const repo = new JsonRecipeRepository();
+const repo = new JsonPostRepository();
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const validated = validateRecipe(body);
-    const recipe = createRecipe(validated);
-    await repo.save(recipe);
+    const validated = validatePost(body);
+    const result = await repo.save(validated);
 
-    return NextResponse.json(
-      { success: true, slug: recipe.slug }, 
-      { status: 201, headers: { "Cache-Control": "no-store" } }
-    );
+    return NextResponse.json({ success: true, slug: result.slug }, { status: 201 });
   } catch (err: any) {
-    return NextResponse.json(
-      { error: err.message || "Ошибка сервера" }, 
-      { status: 400, headers: { "Cache-Control": "no-store" } }
-    );
+    return NextResponse.json({ error: err.message }, { status: 400 });
   }
 }
 
