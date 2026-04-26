@@ -1,24 +1,687 @@
-Welcome to the NextJS base template bootstrapped using the `create-next-app`. This template supports TypeScript, but you can use normal JavaScript as well.
+# 🍳 Gastro Mood
 
-## Getting Started
+> **Современная гастрономическая платформа для сообщества СНГ**  
+> *Версия: 2.0 | Дата: 2026*
 
-Hit the run button to start the development server.
+[![Next.js](https://img.shields.io/badge/Next.js-14.2.5-black?style=flat&logo=next.js)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5.2-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.4-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+---
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on `/api/hello`. This endpoint can be edited in `pages/api/hello.ts`.
+## 📋 Оглавление
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- [🎯 О проекте](#-о-проекта)
+- [✨ Возможности](#-возможности)
+- [🏗 Архитектура](#-архитектура)
+- [📦 Технологический стек](#-технологический-стек)
+- [📁 Структура проекта](#-структура-проекта)
+- [🚀 Быстрый старт](#-быстрый-старт)
+- [🛠 Разработка](#-разработка)
+- [🌐 Деплой](#-деплой)
+- [🔌 API](#-api)
+- [🗃 Данные](#-данные)
+- [🎨 Дизайн-система](#-дизайн-система)
+- [♿ Доступность](#-доступность)
+- [🔮 Планы развития](#-планы-развития)
+- [🤝 Вклад в проект](#-вклад-в-проект)
+- [📄 Лицензия](#-лицензия)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🎯 О проекте
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Gastro Mood** — это не просто сайт с рецептами. Это современная социальная платформа, где:
 
-## Productionizing your Next App
+- 👨‍🍳 **Шеф-повара и любители** делятся кулинарным мастерством
+- 🍽 **Рестораны и кафе** анонсируют гастроужины и новые меню
+- 📰 **Редакции** публикуют гастрономические новости и обзоры
+- 👥 **Пользователи** находят вдохновение в единой ленте контента
 
-To make your next App run smoothly in production make sure to deploy your project with [Repl Deployments](https://docs.replit.com/hosting/deployments/about-deployments)!
+### 🎨 Философия дизайна
 
-You can also produce a production build by running `npm run build` and [changing the run command](https://docs.replit.com/programming-ide/configuring-repl#run) to `npm run start`.
+Мы вдохновляемся лучшими практиками 2026 года:
+- **Минимализм** как у Instagram — контент на первом месте
+- **Скорость** как у Vercel — мгновенная загрузка
+- **Удобство** как у Notion — интуитивный интерфейс
+- **Эстетика** как у Unsplash — визуальное удовольствие
+
+---
+
+## ✨ Возможности
+
+### 🍽 Контент
+
+| Тип поста | Описание | Особенности |
+|-----------|----------|-------------|
+| 🥗 **Рецепт** | Пошаговые инструкции с ингредиентами | Ингредиенты, шаги, фото, время приготовления |
+| 🎉 **Гастроужин** | Анонс событий в ресторанах | Дата, место, кнопка бронирования |
+| 📰 **Новость** | Статьи и обзоры | Текст + медиа, быстрое чтение |
+| 📢 **Реклама** | Нативные промо-материалы | Пометка "Sponsored", CTA-кнопки |
+
+### 📱 Пользовательский опыт
+
+- ✅ **Умная лента** с фильтрацией по типам контента
+- ✅ **Stories-бар** в стиле Instagram для быстрого доступа к авторам
+- ✅ **Скелетоны** при загрузке — никакой "мигающей" пустоты
+- ✅ **Toast-уведомления** вместо навязчивых алертов
+- ✅ **Нативный шеринг** — делитесь рецептами в один клик
+- ✅ **Поиск** в реальном времени без перезагрузки страницы
+- ✅ **Адаптивный дизайн** — идеально на мобильном и десктопе
+
+### ⚡ Производительность
+
+- 🚀 **Next.js App Router** с серверным рендерингом
+- 🗄 **Кэширование** данных (revalidate) для ускорения отклика
+- 🖼 **Оптимизация изображений** через next/image
+- 📦 **Code splitting** — загрузка только нужного кода
+- 🔄 **Lazy loading** для карточек и медиа
+
+---
+
+## 🏗 Архитектура
+
+```
+Гибкая монолитная архитектура с чётким разделением ответственности:
+
+┌─────────────────────────────────┐
+│         Next.js App Router       │
+│  (маршрутизация + серверные     │
+│   компоненты с кэшированием)    │
+└────────┬────────────────────────┘
+         │
+┌────────▼────────┐
+│   /features     │ ← Бизнес-фичи (независимые модули)
+│  • feed/        │   - Лента с полиморфными постами
+│  • submit-form/ │   - Универсальная форма создания
+│  • recipe-view/ │   - Детальный просмотр поста
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│   /core         │ ← Ядро приложения
+│  • domain/      │   - Интерфейсы (Post, Repository)
+│  • services/    │   - Бизнес-логика (валидация, slug)
+│  • storage/     │   - Хранилище (JSON → PostgreSQL ready)
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│   /ui           │ ← Переиспользуемый UI
+│  • components/  │   - Button, Input, Card, Skeleton
+│  • utils/       │   - cn(), хелперы
+└────────┬────────┘
+```
+
+### 🔑 Принципы
+
+| Принцип | Реализация | Выгода |
+|---------|-----------|--------|
+| **Separation of Concerns** | Чёткие слои `features/` / `core/` / `ui/` | Легко тестировать и масштабировать |
+| **Type Safety** | TypeScript + строгие интерфейсы | Меньше багов, лучше автодополнение |
+| **Progressive Enhancement** | SSR + Client Components | Быстрая первая отрисовка + интерактивность |
+| **Design Tokens** | Tailwind config + CSS variables | Консистентный дизайн во всём приложении |
+
+---
+
+## 📦 Технологический стек
+
+### 🔧 Основные зависимости
+
+```json
+{
+  "framework": "Next.js 14.2.5",
+  "ui": "React 18.3.1",
+  "styling": "Tailwind CSS 3.4.4",
+  "language": "TypeScript 5.5.2",
+  "icons": "lucide-react 0.395.0",
+  "utils": {
+    "clsx": "2.1.1",
+    "tailwind-merge": "2.3.0",
+    "slugify": "1.6.6",
+    "sonner": "1.7.4"
+  }
+}
+```
+
+### 🛠 Инструменты разработки
+
+| Инструмент | Версия | Назначение |
+|------------|--------|-----------|
+| ESLint | 8.57.0 | Линтинг кода |
+| TypeScript | 5.5.2 | Статическая типизация |
+| PostCSS | 8.4.38 | Обработка стилей |
+| Autoprefixer | 10.4.19 | Вендорные префиксы |
+
+> ⚠️ **Важно:** Версии зафиксированы без `^` для гарантированной совместимости. При установке используйте `--legacy-peer-deps`.
+
+---
+
+## 📁 Структура проекта
+
+```
+gastro-mood/
+├── 📄 package.json          # Зависимости и скрипты
+├── 📄 next.config.mjs       # Конфигурация Next.js
+├── 📄 tailwind.config.ts    # Дизайн-токены и плагины
+├── 📄 tsconfig.json         # Настройки TypeScript + path aliases
+├── 📄 .gitignore           # Исключения для Git
+├── 📄 README.md            # Этот файл
+│
+├── 📁 app/                 # Next.js App Router
+│   ├── 📄 layout.tsx       # Root layout + Toaster
+│   ├── 📄 page.tsx         # Redirect to /feed
+│   ├── 📄 globals.css      # Глобальные стили + @layer компоненты
+│   ├── 📄 loading.tsx      # Глобальный лоадер
+│   ├── 📄 error.tsx        # Обработчик ошибок
+│   ├── 📄 not-found.tsx    # Страница 404
+│   │
+│   ├── 📁 api/
+│   │   └── 📁 submit/
+│   │       └── 📄 route.ts # POST /api/submit — создание поста
+│   │
+│   └── 📁 recipe/
+│       └── 📁 [slug]/
+│           └── 📄 page.tsx # Динамический роут для просмотра поста
+│
+├── 📁 features/            # Бизнес-фичи (по доменам)
+│   ├── 📁 feed/           # Главная лента
+│   │   ├── 📄 page.tsx    # Серверный компонент ленты
+│   │   ├── 📄 StoryBar.tsx # Горизонтальный скролл историй
+│   │   ├── 📄 Tabs.tsx    # Фильтры: Всё/Рецепты/Гастроужины
+│   │   └── 📄 SmartPostCard.tsx # Умная карточка (полиморфный рендер)
+│   │
+│   ├── 📁 submit-form/    # Форма создания контента
+│   │   ├── 📄 page.tsx    # Страница /submit
+│   │   └── 📄 SubmitForm.tsx # Универсальная форма с переключателем типа
+│   │
+│   └── 📁 recipe-view/    # Просмотр поста
+│       └── 📄 page.tsx    # Детальная страница с адаптивным контентом
+│
+├── 📁 core/               # Ядро приложения
+│   ├── 📁 domain/
+│   │   └── 📄 post.ts     # Интерфейсы: Post, PostType, PostRepository
+│   │
+│   ├── 📁 services/
+│   │   ├── 📄 validation.ts # Валидация входных данных по типу поста
+│   │   └── 📄 recipe.service.ts # Хелперы: slugify, formatDate
+│   │
+│   └── 📁 storage/
+│       └── 📄 json-storage.ts # Реализация репозитория на JSON-файле
+│
+├── 📁 ui/                 # Переиспользуемый UI
+│   ├── 📁 components/
+│   │   ├── 📄 Button.tsx  # Кнопки: primary/secondary/ghost
+│   │   ├── 📄 Input.tsx   # Поля ввода с лейблами и ошибками
+│   │   ├── 📄 Card.tsx    # Базовая карточка
+│   │   ├── 📄 Skeleton.tsx # Пульсирующий лоадер-заглушка
+│   │   └── 📄 index.ts    # Баррель-экспорты
+│   │
+│   ├── 📁 utils/
+│   │   ├── 📄 cn.ts       # clsx + tailwind-merge хелпер
+│   │   └── 📄 index.ts
+│   │
+│   └── 📄 index.ts        # Главный экспорт библиотеки
+│
+├── 📁 public/             # Статические файлы
+│   └── 📁 images/
+│       └── placeholder.jpg # Заглушка для битых изображений
+│
+└── 📁 data/               # Локальное хранилище (не коммитить!)
+    └── posts.json         # База постов (создаётся автоматически)
+```
+
+---
+
+## 🚀 Быстрый старт
+
+### 📋 Предварительные требования
+
+- Node.js 18.17 или новее
+- npm 9+ или pnpm 8+
+- Git (опционально, для работы с репозиторием)
+
+### ⚡ Установка
+
+```bash
+# 1. Клонируйте репозиторий
+git clone <repository-url>
+cd gastro-mood
+
+# 2. Установите зависимости (важно: с флагом для обхода конфликтов)
+npm install --legacy-peer-deps
+
+# 3. Запустите сервер разработки
+npm run dev
+```
+
+Откройте [http://localhost:3000](http://localhost:3000) в браузере.
+
+### 🧪 Тестирование функционала
+
+| Страница | Что проверить | Ожидаемый результат |
+|----------|--------------|-------------------|
+| `/` | Лента контента | Stories-бар, табы, карточки постов, скелетоны при загрузке |
+| `/submit` | Форма создания | Переключатель типа поста, динамические поля, тосты при отправке |
+| `/recipe/[slug]` | Просмотр поста | Адаптивный контент в зависимости от типа, кнопка "Поделиться" |
+| Поиск в ленте | Фильтрация | Мгновенная фильтрация без перезагрузки страницы |
+
+---
+
+## 🛠 Разработка
+
+### 📜 Доступные скрипты
+
+```bash
+npm run dev      # Запуск сервера разработки (порт 3000)
+npm run build    # Продакшен-сборка
+npm run start    # Запуск продакшен-сервера
+npm run lint     # Проверка кода через ESLint
+```
+
+### 🎨 Стилизация
+
+Проект использует **Tailwind CSS** с кастомной дизайн-системой в `app/globals.css`:
+
+```css
+@layer components {
+  /* Кнопки */
+  .btn { /* базовые стили */ }
+  .btn-primary { /* тёмная акцентная */ }
+  .btn-secondary { /* светлая вторичная */ }
+  
+  /* Поля ввода */
+  .input { /* единый стиль для input/textarea */ }
+  
+  /* Карточки */
+  .card { /* базовая карточка */ }
+  .card-glass { /* эффект стекла */ }
+}
+```
+
+### 🔧 Path Aliases
+
+В `tsconfig.json` настроены алиасы для удобного импорта:
+
+```ts
+import { Button } from "@ui/components";
+import { Post } from "@core/domain/post";
+import { SmartPostCard } from "@features/feed/SmartPostCard";
+```
+
+### 🧹 Линтинг и форматирование
+
+```bash
+# Проверить код
+npm run lint
+
+# Исправить авто-исправляемые проблемы
+npx eslint . --fix
+```
+
+---
+
+## 🌐 Деплой
+
+### 🔄 Replit
+
+1. Создайте новый Repl с шаблоном **Next.js**
+2. Загрузите файлы проекта
+3. Настройте `.replit`:
+
+```toml
+run = "npm run dev"
+entrypoint = "app/page.tsx"
+
+[environment]
+NPM_FLAGS = "--legacy-peer-deps"
+
+[nix]
+channel = "stable-23_11"
+```
+
+4. Нажмите **Run** — проект запустится автоматически
+
+### ▲ Vercel (рекомендуется для продакшена)
+
+```bash
+# 1. Установите Vercel CLI
+npm i -g vercel
+
+# 2. Авторизуйтесь
+vercel login
+
+# 3. Задеплойте
+vercel --prod
+```
+
+Или подключите репозиторий GitHub в панели Vercel для автоматического деплоя при `git push`.
+
+### 🐳 Docker (опционально)
+
+```dockerfile
+# Dockerfile
+FROM node:18-alpine AS base
+FROM base AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --legacy-peer-deps
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+---
+
+## 🔌 API
+
+### POST `/api/submit` — Создание поста
+
+**Запрос:**
+```json
+{
+  "type": "recipe | event | news | ad",
+  "title": "Заголовок поста",
+  "content": "Описание / текст",
+  "imageUrl": "https://...",
+  "author": "Имя автора",
+  "ingredients": ["ингредиент 1", "ингредиент 2"], // только для recipe
+  "steps": ["шаг 1", "шаг 2"], // только для recipe
+  "date": "2026-12-31", // только для event
+  "location": "Ресторан Х" // только для event
+}
+```
+
+**Ответ (201):**
+```json
+{
+  "success": true,
+  "slug": "domashnyaya-pasta-karbonara"
+}
+```
+
+**Ответ (400):**
+```json
+{
+  "error": "Описание ошибки валидации"
+}
+```
+
+### 🔐 Валидация
+
+- `title`: 3-100 символов, обязательно
+- `imageUrl`: должен начинаться с `http://` или `https://`
+- `author`: минимум 2 символа
+- Для `recipe`: обязательны `ingredients` и `steps` (непустые массивы)
+
+---
+
+## 🗃 Данные
+
+### Хранение
+
+По умолчанию используется **файловое JSON-хранилище** (`data/posts.json`):
+
+- ✅ Простота: не требует настройки БД для разработки
+- ✅ Персистентность: данные сохраняются между перезапусками
+- ⚠️ Ограничения: не подходит для продакшена с высокой нагрузкой
+
+### Миграция на PostgreSQL
+
+Архитектура готова к замене хранилища благодаря интерфейсу `PostRepository`:
+
+```ts
+// 1. Создайте PostgresRepository, реализующий интерфейс
+// 2. Замените импорт в features:
+//    import { JsonPostRepository } from "@core/storage/json-storage";
+//    на:
+//    import { PostgresRepository } from "@core/storage/postgres-storage";
+// 3. Настройте подключение через environment variables
+```
+
+### Seed-данные (для тестирования)
+
+Создайте `data/seed.json` и добавьте скрипт импорта:
+
+```bash
+# scripts/seed.ts
+import { JsonPostRepository } from "@core/storage/json-storage";
+import seedData from "../data/seed.json";
+
+async function seed() {
+  const repo = new JsonPostRepository();
+  for (const post of seedData) {
+    await repo.save(post);
+  }
+  console.log("✅ Seed completed");
+}
+seed();
+```
+
+---
+
+## 🎨 Дизайн-система
+
+### 🎨 Цветовая палитра
+
+| Роль | Класс Tailwind | HEX | Использование |
+|------|---------------|-----|--------------|
+| Фон страницы | `bg-white` / `bg-stone-50` | `#ffffff` / `#fafaf9` | Основной фон |
+| Текст основной | `text-stone-950` | `#0c0a09` | Заголовки, основной текст |
+| Текст вторичный | `text-stone-500` | `#78716c` | Подписи, мета-информация |
+| Акцент | `text-amber-600` | `#d97706` | Ссылки, иконки, выделение |
+| Границы | `border-stone-100` | `#f5f5f4` | Разделители, карточки |
+
+### 🔤 Типографика
+
+- **Шрифт**: Inter (с поддержкой кириллицы)
+- **Размеры**: 
+  - Заголовки: `text-3xl` — `text-5xl` (48px–60px)
+  - Основной текст: `text-base` (16px)
+  - Подписи: `text-sm` — `text-xs` (14px–12px)
+- **Высота строки**: `leading-relaxed` для читаемости
+
+### 🧩 Компоненты
+
+#### Кнопки
+```tsx
+<Button variant="primary">Основное действие</Button>
+<Button variant="secondary">Вторичное действие</Button>
+<Button variant="ghost" className="gap-2">
+  <Share2 size={16} /> Поделиться
+</Button>
+```
+
+#### Поля ввода
+```tsx
+<Input name="title" label="Название" placeholder="Введите..." required />
+<textarea className="input min-h-[150px]" placeholder="Текст..." />
+```
+
+#### Карточки
+```tsx
+// Базовая
+<Card>Контент</Card>
+
+// Со стекломорфизмом
+<Card className="card-glass">Контент с размытием фона</Card>
+
+// С ховер-эффектом
+<Card className="card-hover">Карточка с анимацией при наведении</Card>
+```
+
+#### Скелетоны
+```tsx
+<Skeleton className="h-48 w-full mb-4" />
+<Skeleton className="h-6 w-3/4" />
+```
+
+### ✨ Анимации
+
+```css
+/* В app/globals.css */
+.fade-in { animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+```
+
+Использование:
+```tsx
+<div className="fade-in">Контент появится плавно</div>
+```
+
+---
+
+## ♿ Доступность (a11y)
+
+Проект следует принципам доступности:
+
+- ✅ **Семантическая разметка**: `<article>`, `<time>`, `<nav>`
+- ✅ **ARIA-атрибуты**: `aria-label`, `aria-busy`, `role="alert"`
+- ✅ **Клавиатурная навигация**: все интерактивные элементы фокусируемы
+- ✅ **Контрастность**: текст соответствует WCAG AA
+- ✅ **Skip link**: ссылка для перехода к контенту (скрыта, видна при фокусе)
+- ✅ **Уменьшение движения**: анимации не мешают пользователям с вестибулярными нарушениями
+
+### 🧪 Проверка доступности
+
+```bash
+# Установите axe-core для тестов
+npm install -D @axe-core/playwright
+
+# Запустите тесты (пример)
+npx playwright test --grep a11y
+```
+
+---
+
+## 🔮 Планы развития
+
+### 🎯 Версия 2.1 (ближайшие 2 недели)
+
+- [ ] 🔐 **Авторизация** (NextAuth.js + профили пользователей)
+- [ ] 🖼 **Загрузка изображений** (drag&drop + оптимизация + Cloudflare R2)
+- [ ] 💬 **Комментарии и лайки** (система вовлечения)
+
+### 🚀 Версия 2.2 (месяц)
+
+- [ ] 🌙 **Тёмная тема** (системная + ручное переключение)
+- [ ] 📱 **PWA** (установка на домашний экран, оффлайн-режим)
+- [ ] 🔍 **Расширенный поиск** (фильтры по ингредиентам, времени, сложности)
+
+### 🌍 Версия 3.0 (квартал)
+
+- [ ] 🗣 **Мультиязычность** (RU/UK/KZ через next-intl)
+- [ ] 📊 **Аналитика для авторов** (просмотры, сохранения, шеры)
+- [ ] 🤝 **Коллаборации** (совместные рецепты, челленджи)
+
+### 💡 Идеи от сообщества
+
+- 🏷 Теги и коллекции рецептов
+- 📅 Календарь гастро-событий с геолокацией
+- 🛒 Интеграция с доставкой продуктов (список ингредиентов → корзина)
+- 🎥 Видео-рецепты (поддержка short-формата)
+
+---
+
+## 🤝 Вклад в проект
+
+Мы приветствуем участие сообщества! Вот как помочь:
+
+### 🐛 Нашли баг?
+
+1. Проверьте [Issues](https://github.com/PandarryGarry/gastro-mood/issues), не сообщал ли кто-то уже
+2. Создайте новый issue с:
+   - 📋 Шагами воспроизведения
+   - 🎯 Ожидаемым и фактическим результатом
+   - 🖼 Скриншотом/видео (если уместно)
+   - 💻 Версией браузера и ОС
+
+### 💡 Есть идея?
+
+1. Обсудите её в [Discussions](https://github.com/PandarryGarry/gastro-mood/discussions)
+2. Если идея одобрена — создайте issue с меткой `enhancement`
+
+### 🔧 Хотите внести код?
+
+```bash
+# 1. Форкните репозиторий
+# 2. Создайте ветку для фичи
+git checkout -b feat/awesome-feature
+
+# 3. Внесите изменения, следуя стилю кода
+# 4. Закоммитьте с понятным сообщением
+git commit -m "feat: добавить фильтрацию по тегам"
+
+# 5. Отправьте и создайте Pull Request
+git push origin feat/awesome-feature
+```
+
+### 📐 Стандарты кода
+
+- ✅ TypeScript: строгий режим, явные типы
+- ✅ ESLint: следуйте правилам из `.eslintrc`
+- ✅ Именование: `PascalCase` для компонентов, `camelCase` для функций
+- ✅ Компоненты: функциональные, с хуками, без классов
+- ✅ Тесты: для бизнес-логики в `core/services/`
+
+---
+
+## 📄 Лицензия
+
+```
+MIT License
+
+Copyright (c) 2026 Gastro Mood Team
+
+Разрешается бесплатное использование, копирование, изменение,
+объединение, публикация, распространение, сублицензирование
+и/или продажа копий Программного обеспечения при условии:
+
+1. Указание оригинального авторства
+2. Сохранение данного уведомления о лицензии во всех копиях
+
+ПРОГРАММА ПРЕДОСТАВЛЯЕТСЯ "КАК ЕСТЬ", БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ.
+```
+
+---
+
+## 🙏 Благодарности
+
+- 🎨 [Lucide](https://lucide.dev) — минималистичные иконки
+- 🎨 [Unsplash](https://unsplash.com) — вдохновляющие фотографии для демо
+- ⚡ [Vercel](https://vercel.com) — хостинг и деплой
+- 💙 [Tailwind Labs](https://tailwindcss.com) — утилитарный CSS-фреймворк
+- 🧠 [Next.js Team](https://nextjs.org) — фреймворк будущего
+
+---
+
+## 📬 Контакты
+
+- 💬 **Обсуждения**: [GitHub Discussions](https://github.com/PandarryGarry/gastro-mood/discussions)
+- 🐛 **Баги и фичи**: [GitHub Issues](https://github.com/PandarryGarry/gastro-mood/issues)
+- 📧 **По вопросам сотрудничества**: `hello@gastrmood.example` *(заглушка)*
+
+---
+
+> ✨ **Gastro Mood** — где каждый рецепт становится историей,  
+> а каждая история находит свою аудиторию.  
+> *Создавайте с любовью. Публикуйте с уверенностью. Вдохновляйте мир.* 🍳🌍
+
+---
+
+*Документ актуален для версии 2.0. Последнее обновление: Апрель 2026*
